@@ -2,7 +2,6 @@ package net.reyemxela.warpsigns.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HangingSignBlock;
-import net.minecraft.block.SignBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HangingSignBlock.class)
-public abstract class HangingBlockMixin {
+public abstract class HangingSignBlockMixin {
     @Inject(at = @At("HEAD"), method = "getStateForNeighborUpdate")
     private void neighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world,
                                 BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
