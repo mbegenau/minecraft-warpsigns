@@ -5,9 +5,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class EditSign {
     public static void editSign(ServerPlayerEntity player, SignBlockEntity sign) {
-        sign.setEditable(true);
-        if (sign.isEditable()) {
-            player.openEditSignScreen(sign);
-        }
+        player.openEditSignScreen(sign, true);
     }
 }

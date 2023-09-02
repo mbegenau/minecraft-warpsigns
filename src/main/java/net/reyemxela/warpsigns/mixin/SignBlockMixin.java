@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SignBlock.class)
 public abstract class SignBlockMixin {
     @Inject(at = @At("HEAD"), method = "getStateForNeighborUpdate")
-    private void neighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
+    private void neighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world,
+                                BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
         if (world.isClient()) { return; }
         if (!((SignBlock)(Object)this).canPlaceAt(state, world, pos)) {
             Pairing.breakSign((ServerWorld)world, null, pos);
