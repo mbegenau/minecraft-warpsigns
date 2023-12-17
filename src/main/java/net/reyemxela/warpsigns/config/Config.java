@@ -26,11 +26,11 @@ public class Config {
 
     private static void loadData() {
         try {
-            var reader = new FileReader(configFile);
+            final var reader = new FileReader(configFile);
             WarpSigns.config = gson.fromJson(reader, Config.class);
             reader.close();
             WarpSigns.LOGGER.info("Loaded warpSign config from file");
-        } catch (IOException | JsonSyntaxException | JsonIOException err) {
+        } catch (final IOException | JsonSyntaxException | JsonIOException err) {
             WarpSigns.LOGGER.info("Creating new config file");
             WarpSigns.config = new Config();
             saveData();
@@ -39,11 +39,11 @@ public class Config {
 
     private static void saveData() {
         try {
-            var writer = new FileWriter(configFile);
+            final var writer = new FileWriter(configFile);
             gson.toJson(WarpSigns.config, writer);
             writer.close();
             WarpSigns.LOGGER.info("Saved warpSign config file");
-        } catch (IOException | JsonIOException err) {
+        } catch (final IOException | JsonIOException err) {
             WarpSigns.LOGGER.info("Unable to create warpSign config file!");
         }
     }

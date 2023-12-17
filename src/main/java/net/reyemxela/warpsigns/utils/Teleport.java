@@ -2,21 +2,26 @@ package net.reyemxela.warpsigns.utils;
 
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.reyemxela.warpsigns.Coords;
-import net.reyemxela.warpsigns.PairingInfo;
 import net.reyemxela.warpsigns.WarpSigns;
 
+/**
+ * The Teleport class provides a static method to teleport a player to a destination specified by warp signs.
+ */
 public class Teleport {
-    public static void teleport(ServerPlayerEntity player, Coords signCoords) {
-        PairingInfo destInfo = WarpSigns.warpSignData.get(signCoords.getKey());
-        ServerWorld newWorld = destInfo.pairedSignDest.getWorld();
-        World prevWorld = player.getWorld();
-        BlockPos prevPos = player.getBlockPos();
+    /**
+     * Moves the player to a specified location, triggering teleportation effects and sounds.
+     *
+     * @param player     The player to teleport.
+     * @param signCoords The coordinates of the sign triggering the teleport.
+     */
+    public static void teleport(final ServerPlayerEntity player, final Coords signCoords) {
+        final var destInfo = WarpSigns.warpSignData.get(signCoords.getKey());
+        final var newWorld = destInfo.pairedSignDest.getWorld();
+        final var prevWorld = player.getWorld();
+        final var prevPos = player.getBlockPos();
 
         prevWorld.playSound(null, prevPos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.BLOCKS, 1f, 1f);
         prevWorld.sendEntityStatus(player, EntityStatuses.ADD_PORTAL_PARTICLES);

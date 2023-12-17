@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 
+/**
+ * The Save class is responsible for handling the serialization and deserialization of data for the WarpSigns mod.
+ */
 public class Save {
     private static final GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
     private static Gson gson;
@@ -37,6 +39,13 @@ public class Save {
         return new PairingInfo(pairedSign, pairedSignDest, facing);
     };
 
+    /**
+     * Initializes the WarpSigns module.
+     * - Registers type adapters for PairingInfo serialization and deserialization
+     * - Creates a Gson instance
+     * - Sets the dataFile to the location 'warpSignData.json' in the server's save path
+     * - Loads the data from the dataFile
+     */
     public static void initialize() {
         gsonBuilder.registerTypeAdapter(PairingInfo.class, serializer);
         gsonBuilder.registerTypeAdapter(PairingInfo.class, deserializer);
@@ -46,10 +55,23 @@ public class Save {
         loadData();
     }
 
+    /**
+     * Loads the data from the dataFile.
+     * - Attempts to read the dataFile using a FileReader
+     * - Converts the data read from the file into a HashMap with String keys and PairingInfo values
+     * - Closes the FileReader
+     * - Logs a message indicating that the warpSign save was successfully loaded
+     * <p>
+     * If an exception occurs during the loading process, the following actions are taken:
+     * - Logs a message indicating that a new save file will be created
+     * - Creates a new empty HashMap for the warpSignData
+     * - Calls the saveData method to save the newly created empty data
+     */
     private static void loadData() {
         try {
-            var reader = new FileReader(dataFile);
-            Type mapType = new TypeToken<HashMap<String, PairingInfo>>(){}.getType();
+            final var reader = new FileReader(dataFile);
+            final var mapType = new TypeToken<HashMap<String, PairingInfo>>() {
+            }.getType();
             WarpSigns.warpSignData = gson.fromJson(reader, mapType);
             reader.close();
             WarpSigns.LOGGER.info("Loaded warpSign save from file");
@@ -60,9 +82,18 @@ public class Save {
         }
     }
 
+    /**
+     * Saves the warpSign data to the dataFile.
+     * - Attempts to write the warpSignData using a FileWriter
+     * - Closes the FileWriter
+     * - Logs a message indicating that the warpSign save file was successfully saved
+     * <p>
+     * If an exception occurs during the saving process, the following action is taken:
+     * - Logs an error message indicating that the warpSign save file creation was unsuccessful
+     */
     public static void saveData() {
         try {
-            var writer = new FileWriter(dataFile);
+            final var writer = new FileWriter(dataFile);
             gson.toJson(WarpSigns.warpSignData, writer);
             writer.close();
             WarpSigns.LOGGER.info("Saved warpSign save file");

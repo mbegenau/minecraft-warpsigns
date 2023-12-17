@@ -18,13 +18,13 @@ public class PairingInfo {
     public final int facing;
     private static final int warpOffset = 1;
 
-    public PairingInfo(Coords signCoords, SignBlockEntity signEntity) {
+    public PairingInfo(final Coords signCoords, final SignBlockEntity signEntity) {
         this.pairedSign = signCoords;
         this.facing = getFacing(signEntity);
         this.pairedSignDest = getDestCoords(signCoords, this.facing);
     }
 
-    public PairingInfo(Coords pairedSign, Coords pairedSignDest, int facing) {
+    public PairingInfo(final Coords pairedSign, final Coords pairedSignDest, final int facing) {
         this.pairedSign = pairedSign;
         this.facing = facing;
         this.pairedSignDest = pairedSignDest;
@@ -35,32 +35,30 @@ public class PairingInfo {
     }
 
 
-    private int getFacing(SignBlockEntity entity) {
+    private int getFacing(final SignBlockEntity entity) {
 //        0  (0)   faces south (+Z)
 //        4  (90)  faces west  (-X)
 //        8  (180) faces north (-Z)
 //        12 (270) faces east  (+X)
 
-        BlockState state = entity.getCachedState();
-        Collection<Property<?>> props = state.getProperties();
+        final var state = entity.getCachedState();
+        final var props = state.getProperties();
         int yaw = 0;
         if (props.contains(SignBlock.ROTATION)) {
-            yaw = ((state.get(SignBlock.ROTATION)+2)%16)/4*90;
+            yaw = ((state.get(SignBlock.ROTATION) + 2) % 16) / 4 * 90;
         } else if (props.contains(WallSignBlock.FACING)) {
-            yaw = (int)state.get(WallSignBlock.FACING).asRotation();
+            yaw = (int) state.get(WallSignBlock.FACING).asRotation();
         }
         return yaw;
     }
 
-    private Coords getDestCoords(Coords coords, int facing) {
-        Coords newCoords = new Coords(coords);
-
-        switch (facing) {
-            case 0 -> newCoords = newCoords.offset(Direction.SOUTH, warpOffset);
-            case 90 -> newCoords = newCoords.offset(Direction.WEST, warpOffset);
-            case 180 -> newCoords = newCoords.offset(Direction.NORTH, warpOffset);
-            case 270 -> newCoords = newCoords.offset(Direction.EAST, warpOffset);
-        }
+    private Coords getDestCoords(final Coords coords, final int facing) {
+        Coords newCoords = new Coords(coords).offset(switch (facing) {
+            case 90 -> Direction.WEST;
+            case 180 -> Direction.NORTH;
+            case 270 -> Direction.EAST;
+            /*case 0, */ default -> Direction.SOUTH;
+        }, warpOffset);
 
         if (isEmpty(newCoords)) {
             for (int i = 0; i < 5; i++) {
@@ -74,8 +72,8 @@ public class PairingInfo {
         return coords;
     }
 
-    private boolean isEmpty(Coords coords) {
-        ServerWorld world = coords.getWorld();
+    private boolean isEmpty(final Coords coords) {
+        final ServerWorld world = coords.getWorld();
         return world.getBlockState(coords).getBlock() == Blocks.AIR
                 && world.getBlockState(coords.offset(Direction.UP, 1)).getBlock() == Blocks.AIR;
     }
